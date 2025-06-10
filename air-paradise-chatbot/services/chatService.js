@@ -103,15 +103,15 @@ function formatFlightResults(flights) {
   
   flights.forEach((flight, index) => {
     // Format departure and arrival times from military time to standard format
-    const depTime = formatTime(formatToMilitaryTime(flight.SCHEDULED_DEPARTURE));
-    const arrTime = formatTime(formatToMilitaryTime(flight.SCHEDULED_ARRIVAL));
+    const depTime = formatTime(formatToMilitaryTime(flight.scheduled_departure));
+    const arrTime = formatTime(formatToMilitaryTime(flight.scheduled_arrival));
     
     // Get airline full name
-    const airlineName = getAirlineName(flight.AIRLINE);
+    const airlineName = getAirlineName(flight.airline);
     
-    response += `${index + 1}. ${flight.AIRLINE}${flight.FLIGHT_NUMBER} (${airlineName}) from ${flight.ORIGIN_AIRPORT} to ${flight.DESTINATION_AIRPORT}\n`;
-    response += `   Date: ${flight.MONTH}/${flight.DAY}/${flight.YEAR}, Departure: ${depTime}, Arrival: ${arrTime}\n`;
-    response += `   Price: $${flight.PREDICTED_PRICE}\n`;
+    response += `${index + 1}. ${flight.airline}${flight.flight_number} (${airlineName}) from ${flight.origin_airport} to ${flight.destination_airport}\n`;
+    response += `   Date: ${flight.month}/${flight.day}/${flight.year}, Departure: ${depTime}, Arrival: ${arrTime}\n`;
+    response += `   Price: $${flight.predicted_price}\n`;
     
     if (index < flights.length - 1) {
       response += '\n';
@@ -130,7 +130,7 @@ function convertKeysToLowerCase(obj) {
       return Object.keys(obj).reduce((acc, key) => {
         let value = obj[key];
         // Convert SCHEDULED_DEPARTURE and SCHEDULED_ARRIVAL to military time
-        if (key === 'SCHEDULED_DEPARTURE' || key === 'SCHEDULED_ARRIVAL') {
+        if (key === 'scheduled_departure' || key === 'scheduled_arrival') {
             value = formatToMilitaryTime(value);
         }
         acc[key.toLowerCase()] = convertKeysToLowerCase(value);

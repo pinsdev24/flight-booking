@@ -18,6 +18,7 @@ export interface Flight {
 export interface ChatMessage {
   type: 'user' | 'bot' | 'error' | 'confirmation';
   content: string;
+  timestamp?: number; // Optional: Unix timestamp (milliseconds)
 }
 
 export interface ChatHistory {

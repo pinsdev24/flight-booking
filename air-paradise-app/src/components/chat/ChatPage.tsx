@@ -34,7 +34,8 @@ const ChatPage: React.FC = () => {
     // Add welcome message
     setMessages([{
       type: 'bot',
-      content: WELCOME_MESSAGE
+      content: WELCOME_MESSAGE,
+      timestamp: Date.now()
     }]);
   }, []);
 
@@ -47,7 +48,8 @@ const ChatPage: React.FC = () => {
     // Optimistically add user message
     const userMessage: ChatMessage = {
       type: 'user',
-      content: messageText
+      content: messageText,
+      timestamp: Date.now()
     };
     
     setMessages(prev => [...prev, userMessage]);
@@ -67,7 +69,8 @@ const ChatPage: React.FC = () => {
       // Add bot response and update flights
       const botMessage: ChatMessage = {
         type: 'bot',
-        content: response.response
+        content: response.response,
+        timestamp: Date.now()
       };
       
       setMessages(prev => [...prev, botMessage]);
@@ -92,7 +95,8 @@ const ChatPage: React.FC = () => {
       // Add error message
       const errorMessage: ChatMessage = {
         type: 'error',
-        content: 'Sorry, there was an error communicating with the server. Please try again.'
+        content: 'Sorry, there was an error communicating with the server. Please try again.',
+        timestamp: Date.now()
       };
       
       setMessages(prev => [...prev, errorMessage]);
@@ -127,27 +131,26 @@ const ChatPage: React.FC = () => {
     // Reset messages to just the welcome message
     setMessages([{
       type: 'bot',
-      content: WELCOME_MESSAGE
+      content: WELCOME_MESSAGE,
+      timestamp: Date.now()
     }]);
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header onResetChat={resetChat} />
       
-      <main className="flex-1 pt-16 pb-4 px-4 mx-auto w-full max-w-3xl">
-        <div className="chat-container">
-          <ChatWindow 
-            messages={messages}
-            flights={flights}
-            onBookFlight={handleBookFlight}
-          />
-          
-          <ChatInput 
-            onSendMessage={sendMessage}
-            isLoading={isLoading}
-          />
-        </div>
+      <main className="flex-1 pt-16 pb-36 sm:pb-28 w-full">
+        <ChatWindow 
+          messages={messages}
+          flights={flights}
+          onBookFlight={handleBookFlight}
+        />
+        
+        <ChatInput 
+          onSendMessage={sendMessage}
+          isLoading={isLoading}
+        />
       </main>
     </div>
   );
