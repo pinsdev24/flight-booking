@@ -264,7 +264,7 @@ async function handleBookingFlow(sessionId, message, llmResponse, bookingState) 
       let flightId = null;
       if (updatedState.airline && updatedState.flightNumber) {
         const query = `SELECT id FROM flights 
-                      WHERE airline = ? AND flight_number = ?`;
+                       WHERE airline = $1 AND flight_number = $2`;
         const flights = await executeQuery(query, [updatedState.airline, updatedState.flightNumber]);
         
         if (flights && flights.length > 0) {
@@ -278,8 +278,8 @@ async function handleBookingFlow(sessionId, message, llmResponse, bookingState) 
       // Insert into bookings table
       if (flightId && updatedState.userName && updatedState.passportNumber) {
         const insertQuery = `INSERT INTO bookings 
-                            (flight_id, user_name, passport_number, booking_reference) 
-                            VALUES (?, ?, ?, ?)`;
+                             (flight_id, user_name, passport_number, booking_reference) 
+                             VALUES ($1, $2, $3, $4)`;
         await executeQuery(insertQuery, [
           flightId, 
           updatedState.userName, 

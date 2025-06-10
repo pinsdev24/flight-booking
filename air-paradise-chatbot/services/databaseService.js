@@ -52,7 +52,7 @@ function getCacheKey(sql, params) {
  * @returns {Promise<Object>} - Flight data
  */
 async function getFlightById(flightId) {
-  const sql = 'SELECT * FROM flights WHERE id = ?';
+  const sql = 'SELECT * FROM flights WHERE id = $1';
   const results = await executeQuery(sql, [flightId]);
   return results.length > 0 ? results[0] : null;
 }
@@ -67,7 +67,7 @@ async function createBooking(bookingData) {
   
   const sql = `
     INSERT INTO bookings (flight_id, user_name, passport_number, booking_reference)
-    VALUES (?, ?, ?, ?)
+    VALUES ($1, $2, $3, $4)
   `;
   
   await executeQuery(sql, [flight_id, user_name, passport_number, booking_reference]);

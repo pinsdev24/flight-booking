@@ -33,9 +33,9 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     // Test database connection
-    const connection = await pool.getConnection();
+    const client = await pool.connect();
     console.log('Database connected successfully');
-    connection.release();
+    client.release();
 
     // Start listening
     app.listen(PORT, () => {
