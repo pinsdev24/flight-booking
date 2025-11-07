@@ -7,6 +7,7 @@ import ChatInput from '../chat/ChatInput';
 import { chatApi } from '../../lib/api';
 import { ChatMessage, ChatHistory, Flight } from '../../lib/types';
 import { limitHistory } from '../../lib/utils';
+import { Button } from '@/components/ui/button';
 
 // Welcome message displayed on initial load
 const WELCOME_MESSAGE = "Welcome to AIR PARADISE Chatbot! How can I help you today? You can ask me about flights, booking information, or travel tips.";
@@ -18,6 +19,7 @@ const ChatPage: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
   const [flights, setFlights] = useState<Flight[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showDataCoverageNotice, setShowDataCoverageNotice] = useState<boolean>(false);
 
   // Initialize session and welcome message
   useEffect(() => {
@@ -28,9 +30,14 @@ const ChatPage: React.FC = () => {
     if (!storedSessionId) {
       localStorage.setItem('airParadiseSessionId', newSessionId);
     }
-    
+
     setSessionId(newSessionId);
-    
+
+    const noticeDismissed = localStorage.getItem('airParadiseDataCoverageNoticeDismissed');
+    if (!noticeDismissed) {
+      setShowDataCoverageNotice(true);
+    }
+
     // Add welcome message
     setMessages([{
       type: 'bot',
@@ -136,12 +143,31 @@ const ChatPage: React.FC = () => {
     }]);
   }, []);
 
+  const dismissDataCoverageNotice = useCallback(() => {
+    localStorage.setItem('airParadiseDataCoverageNoticeDismissed', 'true');
+    setShowDataCoverageNotice(false);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+      {showDataCoverageNotice && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 text-gray-900 shadow-xl dark:bg-gray-800 dark:text-gray-100">
+            <h2 className="text-lg font-semibold">Limited data notice</h2>
+            <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+              The demo database only contains flight information for January 2015 (01/2015).
+              Some searches outside of this range may not return any results.
+            </p>
+            <Button className="mt-6 w-full sm:w-auto" onClick={dismissDataCoverageNotice}>
+              Got it
+            </Button>
+          </div>
+        </div>
+      )}
       <Header onResetChat={resetChat} />
-      
+
       <main className="flex-1 pt-16 pb-36 sm:pb-28 w-full">
-        <ChatWindow 
+        <ChatWindow
           messages={messages}
           flights={flights}
           onBookFlight={handleBookFlight}
